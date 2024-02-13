@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// User
+model User {
+  id             String       @id @unique
+  name           String
+  email          String
+  profilePicture String
+  role           String
+  forumPosts     ForumPosts[]
+  blogPosts      BlogPosts[]
+}
+
+// Forum Posts
+model ForumPosts {
+  id        String          @id @default(cuid())
+  title     String
+  body      String
+  authorId  String
+  author    User            @relation(fields: [authorId], references: [id])
+  likes     String
+  dislikes  String
+  // As SQLite does not Support Scaler List not JSON, so we will use JSON.stringify and JSON.parse to save the UIDs of the Users
+  comments  ForumComments[]
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+}
+
+// Forum Posts Comments
+model ForumComments {
+  id        String     @id @default(cuid())
+  title     String
+  body      String
+  postId    String
+  post      ForumPosts @relation(fields: [postId], references: [id])
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+}
+
+// Blog Posts
+model BlogPosts {
+  id        String         @id @default(cuid())
+  url       String         @unique
+  title     String
+  body      String
+  authorId  String
+  author    User           @relation(fields: [authorId], references: [id])
+  comments  BlogComments[]
+  visitors  Int
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+// Blog Posts Comments
+model BlogComments {
+  id        String    @id @default(cuid())
+  title     String
+  body      String
+  postId    String
+  post      BlogPosts @relation(fields: [postId], references: [id])
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
