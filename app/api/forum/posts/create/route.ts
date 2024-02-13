@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { Type_verifyRequest, verifyRequest } from "../../Verifications/request";
+import {
+  Type_verifyRequest,
+  verifyRequest,
+} from "@/app/api/Verifications/request";
 import { createItem } from "@/app/PrismaClient/dbHandler/handler";
 
 export async function POST(request: Request) {
@@ -15,7 +18,6 @@ export async function POST(request: Request) {
     body: postData?.body,
     authorId: auth?.uid,
   };
-  console.log(dataToAdd);
 
   const createdPost = await createItem(dataToAdd, "forumPosts");
   const status: any = {};

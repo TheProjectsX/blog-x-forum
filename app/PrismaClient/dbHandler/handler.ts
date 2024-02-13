@@ -37,14 +37,22 @@ const createItem = async (
 
 // Read One Task
 const getItem = async (
-  id: String,
+  searchQuery: { id?: String; authorId?: String; postId?: String },
   table: Type_table
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
 
+  const include: any = {};
+  if (table === "forumPosts") {
+    (include["comments"] = true), (include["author"] = true);
+  } else if (table === "forumComments") {
+    include["author"] = true;
+  }
+
   try {
     const data = await currentTable.findUniqueOrThrow({
-      where: { id },
+      where: searchQuery,
+      include: include,
     });
 
     return { success: true, data };
@@ -63,7 +71,7 @@ const getAllItems = async (table: Type_table): Promise<Type_handlerReturn> => {
 
 // Update Task
 const updateItem = async (
-  searchQuery: { id: String; authorId: String },
+  searchQuery: { id?: String; authorId?: String; postId?: String },
   itemContent: Object,
   table: Type_table
 ): Promise<Type_handlerReturn> => {
@@ -83,7 +91,7 @@ const updateItem = async (
 
 // Delete Task
 const deleteItem = async (
-  searchQuery: { id: String; authorId: String },
+  searchQuery: { id?: String; authorId?: String; postId?: String },
   table: Type_table
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];

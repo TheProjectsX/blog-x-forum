@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
-import { Type_verifyRequest, verifyRequest } from "../../Verifications/request";
+import {
+  Type_verifyRequest,
+  verifyRequest,
+} from "@/app/api/Verifications/request";
 import { updateItem } from "@/app/PrismaClient/dbHandler/handler";
 
 export async function PUT(request: Request) {

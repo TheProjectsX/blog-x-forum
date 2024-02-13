@@ -6,7 +6,7 @@ export async function GET(request: Request) {
 
   let parsedData;
   if (postId) {
-    parsedData = await getItem(postId, "forumPosts");
+    parsedData = await getItem({ id: postId }, "forumPosts");
   } else {
     parsedData = await getAllItems("forumPosts");
   }
