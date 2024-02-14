@@ -5,6 +5,7 @@ A Blog website with Forum.
 ### Technologies used So Far:
 
 - Next JS
+- TypeScript (First Time)
 - Prisma
 - SQLite
 - Daisy UI
@@ -12,4 +13,5 @@ A Blog website with Forum.
 ## Why Unfinished?
 
 **I got Board... Have no Interest to Do the Frontend**
+
 But will try to do, If Interest comes Back!
