@@ -7,6 +7,7 @@ export type Type_verifyRequest = {
   auth?: Type_VerifyJWT;
   postData?: { id?: String; title?: String; body?: String };
   commentData?: { id?: String; comment?: String };
+  reactionData?: { id?: String; reaction?: String };
 };
 
 // Action Type
@@ -17,7 +18,8 @@ type Type_action =
   | "comment-create"
   | "comment-read"
   | "comment-update"
-  | "comment-delete";
+  | "comment-delete"
+  | "reaction";
 
 export const verifyRequest = async (
   request: Request,
@@ -82,6 +84,26 @@ export const verifyRequest = async (
   const postTitle: String | null = requestBody["title"];
   const postBody: String | null = requestBody["body"];
   const comment: String | null = requestBody["comment"];
+  const reaction: String | null = requestBody["reaction"];
+
+  // If it's about Reaction
+  if (action === "reaction") {
+    if (!reaction || !postId) {
+      return {
+        success: false,
+        response: NextResponse.json(
+          { success: false, message: "Reaction and ID is Required" },
+          { status: 400 }
+        ),
+      };
+    } else {
+      return {
+        success: true,
+        auth: verification,
+        reactionData: { id: postId, reaction: reaction },
+      };
+    }
+  }
 
   if (action === "comment-create" || action === "comment-update") {
     if (!comment || !postId) {

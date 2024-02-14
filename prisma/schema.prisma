@@ -30,8 +30,8 @@ model ForumPosts {
   body      String
   authorId  String
   author    User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likes     String          @default("")
-  dislikes  String          @default("")
+  likes     String          @default("[]")
+  dislikes  String          @default("[]")
   // As SQLite does not Support Scaler List not JSON, so we will use JSON.stringify and JSON.parse to save the UIDs of the Users
   comments  ForumComments[]
   createdAt DateTime        @default(now())

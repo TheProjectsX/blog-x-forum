@@ -5,7 +5,7 @@ type Type_table = "forumPosts" | "forumComments" | "blogPosts" | "blogComments";
 // Return Type
 export type Type_handlerReturn = {
   success: Boolean;
-  data?: Object;
+  data?: any;
   error?: String;
 };
 
@@ -39,14 +39,16 @@ const createItem = async (
 const getItem = async (
   searchQuery: { id?: any; authorId?: String; postId?: String },
   table: Type_table,
-  include: Object = {}
+  include: Object = {},
+  select: Object = {}
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
 
   try {
     const data = await currentTable.findUniqueOrThrow({
       where: searchQuery,
-      include: include,
+      ...(Object.keys(include).length === 0 ? {} : { include }),
+      ...(Object.keys(select).length === 0 ? {} : { select }),
     });
 
     return { success: true, data };
@@ -69,9 +71,9 @@ const getAllItems = async (
     include: include,
   });
 
-  // Filter and Give the
+  // Filter the Array
+  data.map(filter);
   if (table === "forumPosts") {
-    data.map(filter);
   }
 
   return { success: true, data };
