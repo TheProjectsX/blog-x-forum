@@ -37,7 +37,7 @@ const createItem = async (
 
 // Read One Task
 const getItem = async (
-  searchQuery: { id?: any; authorId?: String; postId?: String },
+  searchQuery: { id?: any; url?: String; authorId?: String; postId?: String },
   table: Type_table,
   include: Object = {},
   select: Object = {}
@@ -83,7 +83,8 @@ const getAllItems = async (
 const updateItem = async (
   searchQuery: { id?: String; authorId?: String; postId?: String },
   itemContent: Object,
-  table: Type_table
+  table: Type_table,
+  select: Object = {}
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
 
@@ -91,6 +92,7 @@ const updateItem = async (
     const data = await currentTable.update({
       where: searchQuery,
       data: itemContent,
+      ...(Object.keys(select).length === 0 ? {} : { select }),
     });
 
     return { success: true, data };

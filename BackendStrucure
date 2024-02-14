@@ -397,13 +397,13 @@
 
     @BlogPosts
         id: [UniqueID]
-        url: [PostURL: "/blog/DD-MM-YYY/@title-{Now()[-4:]}"]
+        url: [PostURL: "/blog/@title-DD-MM-YYYY-{Now()[-4:]}"]
         title: [PostTitle]
         body: [PostBody]
         authorId: [AuthorID]
         author: @User
         comments: @BlogComments[]
-        visits: [VisitorCount]
+        views: [VisitorCount]
         createdAt: [CreateTime]
         updatedAt: [UpdateTime]
 
