@@ -13,15 +13,18 @@ export async function GET(request: Request) {
     return response;
   }
 
-  const parsedData = await getAllItems("forumComments", {
-    postId: commentData?.id,
-  });
+  const parsedData = await getAllItems(
+    {
+      postId: commentData?.id,
+    },
+    "forumComments",
+    { author: true }
+  );
 
   const status: any = {};
   if (parsedData.success) {
     status["status"] = 200;
   } else {
-    console.log(parsedData["error"]);
     parsedData["error"] = "Post Not Found!";
     status["status"] = 404;
   }

@@ -19,7 +19,6 @@ export async function POST(request: Request) {
     authorId: auth?.uid,
   };
 
-  console.log(dataToAdd);
   const createdComment = await createItem(dataToAdd, "forumComments");
   const status: any = {};
   if (createdComment.success) {

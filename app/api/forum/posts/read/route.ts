@@ -6,9 +6,20 @@ export async function GET(request: Request) {
 
   let parsedData;
   if (postId) {
-    parsedData = await getItem({ id: postId }, "forumPosts");
+    parsedData = await getItem({ id: postId }, "forumPosts", {
+      author: true,
+      comments: { include: { author: true } },
+    });
   } else {
-    parsedData = await getAllItems("forumPosts");
+    parsedData = await getAllItems(
+      {},
+      "forumPosts",
+      {
+        author: true,
+        comments: true,
+      },
+      (elm: any) => (elm["comments"] = elm["comments"].length)
+    );
   }
 
   const status: any = {};

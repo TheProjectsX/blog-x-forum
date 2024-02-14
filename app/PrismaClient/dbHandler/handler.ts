@@ -38,15 +38,10 @@ const createItem = async (
 // Read One Task
 const getItem = async (
   searchQuery: { id?: any; authorId?: String; postId?: String },
-  table: Type_table
+  table: Type_table,
+  include: Object = {}
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
-
-  const include: any = {};
-  if (table === "forumPosts") {
-    include["comments"] = { include: { author: true } };
-    include["author"] = true;
-  }
 
   try {
     const data = await currentTable.findUniqueOrThrow({
@@ -62,24 +57,21 @@ const getItem = async (
 
 // Read All Tasks
 const getAllItems = async (
+  searchQuery: Object = {},
   table: Type_table,
-  searchQuery: Object = {}
+  include: Object = {},
+  filter: (elm: any) => {} = (elm: any) => elm
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
-
-  const include: any = {};
-  if (table === "forumPosts") {
-    include["comments"] = true;
-  }
-  include["author"] = true;
 
   const data = await currentTable.findMany({
     where: searchQuery,
     include: include,
   });
 
+  // Filter and Give the
   if (table === "forumPosts") {
-    data.map((elem: any) => (elem["comments"] = elem["comments"].length));
+    data.map(filter);
   }
 
   return { success: true, data };
@@ -119,7 +111,6 @@ const deleteItem = async (
 
     return { success: true, data };
   } catch (error: any) {
-    console.log(error);
     return { success: false, error: error.message };
   }
 };
