@@ -37,15 +37,14 @@ const createItem = async (
 
 // Read One Task
 const getItem = async (
-  searchQuery: { id?: String; authorId?: String; postId?: String },
+  searchQuery: { id?: any; authorId?: String; postId?: String },
   table: Type_table
 ): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
 
   const include: any = {};
   if (table === "forumPosts") {
-    (include["comments"] = true), (include["author"] = true);
-  } else if (table === "forumComments") {
+    include["comments"] = { include: { author: true } };
     include["author"] = true;
   }
 
@@ -62,10 +61,27 @@ const getItem = async (
 };
 
 // Read All Tasks
-const getAllItems = async (table: Type_table): Promise<Type_handlerReturn> => {
+const getAllItems = async (
+  table: Type_table,
+  searchQuery: Object = {}
+): Promise<Type_handlerReturn> => {
   const currentTable: any = DBTables[table];
 
-  const data = await currentTable.findMany();
+  const include: any = {};
+  if (table === "forumPosts") {
+    include["comments"] = true;
+  }
+  include["author"] = true;
+
+  const data = await currentTable.findMany({
+    where: searchQuery,
+    include: include,
+  });
+
+  if (table === "forumPosts") {
+    data.map((elem: any) => (elem["comments"] = elem["comments"].length));
+  }
+
   return { success: true, data };
 };
 
@@ -103,6 +119,7 @@ const deleteItem = async (
 
     return { success: true, data };
   } catch (error: any) {
+    console.log(error);
     return { success: false, error: error.message };
   }
 };

@@ -19,8 +19,8 @@ model User {
   role           String
   forumPosts     ForumPosts[]
   blogPosts      BlogPosts[]
-  forumComments  ForumComments[] @ignore
-  blogComments   BlogComments[]  @ignore
+  forumComments  ForumComments[]
+  blogComments   BlogComments[]
 }
 
 // Forum Posts
@@ -29,7 +29,7 @@ model ForumPosts {
   title     String
   body      String
   authorId  String
-  author    User            @relation(fields: [authorId], references: [id])
+  author    User            @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes     String          @default("")
   dislikes  String          @default("")
   // As SQLite does not Support Scaler List not JSON, so we will use JSON.stringify and JSON.parse to save the UIDs of the Users
@@ -43,9 +43,9 @@ model ForumComments {
   id        String     @id @default(cuid())
   comment   String
   authorId  String
-  author    User       @relation(fields: [authorId], references: [id])
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   postId    String
-  post      ForumPosts @relation(fields: [postId], references: [id])
+  post      ForumPosts @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt
 }
@@ -57,7 +57,7 @@ model BlogPosts {
   title     String
   body      String
   authorId  String
-  author    User           @relation(fields: [authorId], references: [id])
+  author    User           @relation(fields: [authorId], references: [id], onDelete: Cascade)
   comments  BlogComments[]
   visitors  Int
   createdAt DateTime       @default(now())
@@ -69,9 +69,9 @@ model BlogComments {
   id        String    @id @default(cuid())
   comment   String
   authorId  String
-  author    User      @relation(fields: [authorId], references: [id])
+  author    User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   postId    String
-  post      BlogPosts @relation(fields: [postId], references: [id])
+  post      BlogPosts @relation(fields: [postId], references: [id], onDelete: Cascade)
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 }

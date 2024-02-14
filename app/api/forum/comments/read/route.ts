@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getItem } from "@/app/PrismaClient/dbHandler/handler";
+import { getAllItems, getItem } from "@/app/PrismaClient/dbHandler/handler";
 import {
   Type_verifyRequest,
   verifyRequest,
@@ -13,10 +13,9 @@ export async function GET(request: Request) {
     return response;
   }
 
-  const parsedData = await getItem(
-    { authorId: commentData?.id },
-    "forumComments"
-  );
+  const parsedData = await getAllItems("forumComments", {
+    postId: commentData?.id,
+  });
 
   const status: any = {};
   if (parsedData.success) {
